@@ -1,0 +1,30 @@
+# Build me a modular AI agent using FastAPI, LangChain, OpenAI, and Qdrant.
+# Include support for local LLMs via Ollama and OpenAI as a default.
+
+# 🧱 Project goal:
+# A lead qualification chatbot that:
+# - Accepts user questions about retreats (e.g. Ayahuasca, location, pricing)
+# - Uses vector search via Qdrant + OpenAI embeddings to retrieve answers from PDFs/website content
+# - Generates a helpful response using GPT-4o (or local model via Ollama)
+# - Detects when a user shows interest (e.g. "I want to book") and extracts name/email
+# - Logs that data to Airtable or Supabase
+
+# 🧠 Key modules to build:
+# 1. embed.py → Load retreat documents, chunk them, embed them with OpenAI, store in Qdrant
+# 2. retriever.py → Query Qdrant with LangChain and pass context to LLM
+# 3. lead_logger.py → When lead is detected, save email + interest to Supabase or Airtable
+# 4. main.py → FastAPI server with POST endpoint `/chat` that takes user message and returns an answer
+# 5. llm_router.py → Switch between OpenAI and Ollama based on .env setting `LLM_PROVIDER=openai|ollama`
+
+# 🔀 In llm_router.py:
+# - Use LangChain's ChatOpenAI for OpenAI
+# - Use LangChain's ChatOllama for local models (e.g. mistral, llama3)
+# - Load .env config and switch logic via os.getenv("LLM_PROVIDER", "openai")
+
+# 📦 Add a .env file with:
+# OPENAI_API_KEY=sk-...
+# LLM_PROVIDER=openai
+
+# 📦 Add a `requirements.txt` with dependencies: fastapi, langchain, openai, qdrant-client, uvicorn, python-dotenv
+
+# Start by creating llm_router.py and a test file to call both LLMs

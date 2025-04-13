@@ -1,0 +1,24 @@
+# Ignore environment files
+chatbot-backend/.env
+chatbot-backend/docs
+
+# Python-related ignores
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+
+# Virtual environment
+venv/
+.env/
+
+# IDE-specific ignores
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+.DS_Store
