@@ -22,7 +22,7 @@ export default function ChatWidget() {
       content: msg.text
     }));
 
-    const apiUrl = process.env.NEXT_PUBLIC_CHATBOT_API || 'http://localhost:8000/chat';
+    const apiUrl = `${process.env.NEXT_PUBLIC_CHAT_API_URL}/chat` || 'http://localhost:8000/chat';
 
     try {
       const res = await fetch(apiUrl, {
