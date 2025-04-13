@@ -2,10 +2,10 @@ import os
 from dotenv import load_dotenv
 
 from qdrant_client import QdrantClient
-from langchain_community.vectorstores import Qdrant
+from langchain_qdrant import Qdrant
 from langchain.chains import RetrievalQA
 from langchain.prompts import ChatPromptTemplate
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_ollama import OllamaEmbeddings
 
 from llm_router import get_llm
 
@@ -30,7 +30,8 @@ def get_vectorstore():
         return Qdrant(client=client, collection_name=QDRANT_COLLECTION, embeddings=embeddings)
 
     elif LLM_PROVIDER == "ollama":
-        embeddings = OllamaEmbeddings(model="nomic-embed-text") 
+        OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        embeddings = OllamaEmbeddings(model="nomic-embed-text", base_url=OLLAMA_BASE_URL)
         return Qdrant(
             client=client,
             collection_name=QDRANT_COLLECTION,
