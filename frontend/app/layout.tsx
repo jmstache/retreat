@@ -1,9 +1,12 @@
 import './globals.css';
-import type { Metadata } from 'next';
+
 import { Cormorant_Garamond, Poppins } from 'next/font/google';
-import { ThemeProvider } from '@/components/theme-provider';
-import Navigation from '@/components/navigation';
+
 import Footer from '@/components/footer';
+import type { Metadata } from 'next';
+import Navigation from '@/components/navigation';
+import Script from 'next/script';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const serif = Cormorant_Garamond({
   subsets: ['latin'],
@@ -32,6 +35,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+      <script defer src="http://umami-go44ogggkgw4g8kowk8gso4w.138.199.163.200.sslip.io/script.js" data-website-id="bd11e9c6-9102-4e0c-ac80-d16bd5a78b53"></script>
+      </head>
       <body className={`${serif.variable} ${sans.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
