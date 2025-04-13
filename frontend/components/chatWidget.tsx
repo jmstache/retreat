@@ -22,8 +22,10 @@ export default function ChatWidget() {
       content: msg.text
     }));
 
+    const apiUrl = process.env.NEXT_PUBLIC_CHATBOT_API || 'http://localhost:8000/chat';
+
     try {
-      const res = await fetch("http://localhost:8000/chat", {
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ history: formattedHistory })
