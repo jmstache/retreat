@@ -22,9 +22,9 @@ export default function ChatWidget() {
       content: msg.text
     }));
 
-    const baseUrl = process.env.CHAT_API_URL || 'http://localhost:8000';
+    const baseUrl = process.env.NEXT_PUBLIC_CHAT_API_URL || 'http://localhost:8000';
     const apiUrl = `${baseUrl}/chat`;
-    console.log("🌐 CHAT_API_URL:", process.env.CHAT_API_URL);
+    console.log("🌐 CHAT_API_URL:", process.env.NEXT_PUBLIC_CHAT_API_URL);
     console.log("➡️ Using Chat API:", apiUrl);
 
     try {
