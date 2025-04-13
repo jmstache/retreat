@@ -1,30 +1,42 @@
 import os
 from dotenv import load_dotenv
+
+from qdrant_client import QdrantClient
 from langchain_community.vectorstores import Qdrant
-from langchain_openai import OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.prompts import ChatPromptTemplate
-from qdrant_client import QdrantClient
+
 from llm_router import get_llm
+
+# Optional import (only if needed)
+from langchain_openai import OpenAIEmbeddings
+# Future: from langchain_community.embeddings import HuggingFaceEmbeddings
 
 load_dotenv()
 
 QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 QDRANT_COLLECTION = os.getenv("QDRANT_COLLECTION", "lifesynergy-knowledge")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY", None)
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
+
 
 # Step 1: Load vectorstore
 def get_vectorstore():
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
     client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
 
-    return Qdrant(
-        client=client,
-        collection_name=QDRANT_COLLECTION,
-        embeddings=embeddings,
-    )
+    if LLM_PROVIDER == "openai":
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        return Qdrant(client=client, collection_name=QDRANT_COLLECTION, embeddings=embeddings)
 
-# Step 2: Custom spiritual system prompt
+    elif LLM_PROVIDER == "ollama":
+        # Skip embedding – assumes Qdrant already has vectorized data
+        return Qdrant(client=client, collection_name=QDRANT_COLLECTION)
+
+    else:
+        raise ValueError(f"Unsupported LLM_PROVIDER: {LLM_PROVIDER}")
+
+
+# Step 2: System prompt
 system_message = """
 You are the retreat assistant for LifeSynergy Retreats — a sacred, supportive space for inner healing through magic mushroom retreats, yoga, and integration in Playa del Carmen, Mexico.
 
@@ -48,8 +60,6 @@ lead:
   retreat_interest: ...
   notes: ...
 ---
-
-
 """
 
 prompt = ChatPromptTemplate.from_messages([
@@ -57,7 +67,8 @@ prompt = ChatPromptTemplate.from_messages([
     ("user", "Context:\n{context}\n\nQuestion:\n{question}")
 ])
 
-# Step 3: Setup chain with retriever + LLM
+
+# Step 3: Setup chain
 def get_qa_chain():
     retriever = get_vectorstore().as_retriever(
         search_kwargs={"k": 5, "score_threshold": 0.3}
@@ -71,7 +82,8 @@ def get_qa_chain():
         chain_type_kwargs={"prompt": prompt}
     )
 
-# Step 4: Main query function
+
+# Step 4: Query
 def query_retreat_agent(question: str):
     qa = get_qa_chain()
     result = qa.invoke({"query": question})
