@@ -2,6 +2,8 @@ fastapi
 langchain
 langchain-community 
 langchain-openai
+langchain-ollama 
+langchain-qdrant
 openai
 qdrant-client
 uvicorn

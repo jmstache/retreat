@@ -5,6 +5,7 @@ from qdrant_client import QdrantClient
 from langchain_community.vectorstores import Qdrant
 from langchain.chains import RetrievalQA
 from langchain.prompts import ChatPromptTemplate
+from langchain_community.embeddings import OllamaEmbeddings
 
 from llm_router import get_llm
 
@@ -29,12 +30,15 @@ def get_vectorstore():
         return Qdrant(client=client, collection_name=QDRANT_COLLECTION, embeddings=embeddings)
 
     elif LLM_PROVIDER == "ollama":
-        # Skip embedding – assumes Qdrant already has vectorized data
-        return Qdrant(client=client, collection_name=QDRANT_COLLECTION)
+        embeddings = OllamaEmbeddings(model="nomic-embed-text") 
+        return Qdrant(
+            client=client,
+            collection_name=QDRANT_COLLECTION,
+            embeddings=embeddings,
+        )
 
     else:
         raise ValueError(f"Unsupported LLM_PROVIDER: {LLM_PROVIDER}")
-
 
 # Step 2: System prompt
 system_message = """
