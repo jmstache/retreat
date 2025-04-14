@@ -18,6 +18,7 @@ def get_llm():
     elif provider == "ollama":
         model = os.getenv("OLLAMA_MODEL", "mistral")
         base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        print(f"🧠 Using Ollama base URL: {base_url}")
         return ChatOllama(model=model, base_url=base_url)
 
     else:
